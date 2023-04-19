@@ -1,10 +1,10 @@
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-// async function dbConnect() {
-//   mongoose.connect(process.env.MONGODB_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   });
-// }
+async function dbConnect() {
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable missing');
+  }
+  mongoose.connect(process.env.MONGODB_URI);
+}
 
-// export default dbConnect;
+export default dbConnect;

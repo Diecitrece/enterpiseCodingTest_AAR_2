@@ -1,6 +1,10 @@
 import Joi from 'joi';
 import Extension from '@joi/date';
 const JoiExtended = Joi.extend(Extension);
+export const idSchema = JoiExtended.string().min(24).max(24).messages({
+  'string.min': 'Event ID must be 24 characters long',
+  'string.max': 'Event ID must be 24 characters long',
+});
 export const datetimeSchema = JoiExtended.date()
   .default('now')
   .format(['YYYY/MM/DD'])

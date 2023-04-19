@@ -3,7 +3,12 @@ import bodyParser from 'body-parser';
 import { dependenciesContainer } from '@infrastructure/shared/dependencyInjection';
 import { Event } from '@core/domain/event.model';
 import { EventCRUD } from '@core/application/ports/input/eventCRUD.port';
-import { datetimeSchema, eventSchema, placeSchema } from './event.validation';
+import {
+  datetimeSchema,
+  eventSchema,
+  idSchema,
+  placeSchema,
+} from './event.validation';
 const eventUseCases: EventCRUD = dependenciesContainer.cradle.eventUseCases();
 export const eventRouter = Router();
 eventRouter.use(bodyParser.json());
@@ -15,21 +20,21 @@ eventRouter
         let events: Event[];
         let datetime: string | undefined;
         let place: string | undefined;
-        if (req.query.datetime && typeof req.query.datetime === 'string') {
-          const validation = datetimeSchema.validate(req.query.datetime);
+        if (req.body.datetime && typeof req.body.datetime === 'string') {
+          const validation = datetimeSchema.validate(req.body.datetime);
           if (validation && validation.error) {
             res.status(400).send(validation.error?.details[0].message);
             return;
           }
-          datetime = req.query.datetime;
+          datetime = req.body.datetime;
         }
-        if (req.query.place && typeof req.query.place === 'string') {
-          const validation = placeSchema.validate(req.query.place);
+        if (req.body.place && typeof req.body.place === 'string') {
+          const validation = placeSchema.validate(req.body.place);
           if (validation && validation.error) {
             res.status(400).send(validation.error?.details[0].message);
             return;
           }
-          place = req.query.place;
+          place = req.body.place;
         }
         events = await eventUseCases.getAll(datetime, place);
         res.status(200).json(events);
@@ -64,7 +69,12 @@ eventRouter
           res.status(400).send('Invalid event ID');
           return;
         }
-        const eventID: string = req.params.event;
+        const validation = idSchema.validate(req.params.eventID);
+        if (validation && validation.error) {
+          res.status(400).send(validation.error?.details[0].message);
+          return;
+        }
+        const eventID: string = req.params.eventID;
         const event: Event = await eventUseCases.getOne(eventID);
         res.status(200).send(event);
       } catch (e) {
