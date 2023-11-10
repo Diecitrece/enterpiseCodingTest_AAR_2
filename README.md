@@ -2,10 +2,8 @@
 
 **It is important to use node v19.9.0**
 
-1. Open a terminal and execute `git clone https://github.com/Diecitrece/acruxCodingTest.git`
-2. Execute `cd acruxCodingTest`
-3. Run `npm install` and `npm run start`
-4. Go to `http://localhost:8080` to start using the API
+1. Run `npm install` and `npm run start`
+2. Go to `http://localhost:8080` to start using the API
 
 ## Three CRUD endpoints
 
